@@ -5,7 +5,8 @@
 
 # SchemaPlus::Enums
 
-TODO: Write a gem description
+SchemaPlus::Enums provides support for enum data types in ActiveRecord.  Currently the support is limited to defining enum data types, for PostgreSQL only.
+
 
 SchemaPlus::Enums is part of the [SchemaPlus](https://github.com/SchemaPlus/) family of Ruby on Rails ActiveRecord extension gems.
 
@@ -34,11 +35,17 @@ SchemaPlus::Enums is tested on:
 
 ## Usage
 
-TODO: Write usage instructions here
+In a migration:
+
+```ruby
+create_enum :color, 'red', 'green', 'blue'
+create_enum :color, 'cyan', 'magenta', 'yellow', 'black', schema: 'cmyk'
+```
+
 
 ## History
 
-* 0.1.0 - Initial release
+* 0.1.0 - Initial release, pulled from schema_plus 1.x
 
 ## Development & Testing
 

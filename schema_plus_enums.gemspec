@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = SchemaPlus::Enums::VERSION
   gem.authors       = ["ronen barzel"]
   gem.email         = ["ronen@barzel.org"]
-  gem.summary       = %q{TODO: Write a short summary. Required.}
-  gem.description   = %q{TODO: Write a longer description. Optional.}
+  gem.summary       = %q{Adds support for enum data types in ActiveRecord}
+  gem.description   = %q{Adds support for enum data types in ActiveRecord}
   gem.homepage      = "https://github.com/SchemaPlus/schema_plus_enums"
   gem.license       = "MIT"
 
