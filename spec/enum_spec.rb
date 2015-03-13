@@ -45,6 +45,15 @@ describe 'enum', :postgresql => :only do
       end
     end
 
+    it 'should create enum using symbols' do
+      begin
+        migration.create_enum :color, :red, :green, :blue
+        expect(enum_fields('color')).to eq(%w|red green blue|)
+      ensure
+        migration.execute 'DROP TYPE IF EXISTS color'
+      end
+    end
+
     it 'should create enum with schema' do
       begin
         migration.execute 'CREATE SCHEMA colors'

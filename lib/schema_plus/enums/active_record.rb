@@ -57,7 +57,7 @@ module SchemaPlus::Enums
         end
 
         def escape_enum_value(value)
-          escaped_value = value.sub("'", "''")
+          escaped_value = value.to_s.sub("'", "''")
           "'#{escaped_value}'"
         end
 
