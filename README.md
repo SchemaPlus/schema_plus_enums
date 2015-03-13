@@ -40,6 +40,9 @@ In a migration:
 ```ruby
 create_enum :color, 'red', 'green', 'blue'
 create_enum :color, 'cyan', 'magenta', 'yellow', 'black', schema: 'cmyk'
+
+drop_enum :color
+drop_enum :color, schema: 'cmyk'
 ```
 
 
