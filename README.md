@@ -35,12 +35,26 @@ SchemaPlus::Enums is tested on:
 
 ## Usage
 
-In a migration:
+In a migration,
+an enum can be created:
 
 ```ruby
-create_enum :color, 'red', 'green', 'blue'
+create_enum :color, 'red', 'green', 'blue' # default schema is 'public'
 create_enum :color, 'cyan', 'magenta', 'yellow', 'black', schema: 'cmyk'
+```
 
+And can be altered: (added a new value)
+
+```ruby
+alter_enum :color, 'black'
+alter_enum :color, 'purple', after: 'red'
+alter_enum :color, 'pink', before: 'purple'
+alter_enum :color, 'white', schema: 'public'
+```
+
+And can be dropped:
+
+```ruby
 drop_enum :color
 drop_enum :color, schema: 'cmyk'
 ```
