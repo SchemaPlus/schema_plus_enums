@@ -15,6 +15,18 @@ describe "Schema dump" do
       end
     end
 
+    it 'should list enums alphabetically' do
+      begin
+        connection.execute "CREATE TYPE height AS ENUM ('tall', 'medium', 'short')"
+        connection.execute "CREATE TYPE color AS ENUM ('red', 'green', 'blue')"
+        expect(dump_schema).to match(%r{create_enum "color", "red", "green", "blue"\s+create_enum "height", "tall", "medium", "short"}m)
+      ensure
+        connection.execute "DROP TYPE color"
+        connection.execute "DROP TYPE height"
+      end
+    end
+
+
     it 'should include enum with schema' do
       begin
         connection.execute "CREATE SCHEMA cmyk; CREATE TYPE cmyk.color AS ENUM ('cyan', 'magenta', 'yellow', 'black')"
