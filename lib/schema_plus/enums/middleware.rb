@@ -7,7 +7,7 @@ module SchemaPlus::Enums
         module Postgresql
 
           def after(env)
-            env.connection.enums.sort_by {|k| k[1] }.each do |schema, name, values|
+            env.connection.enums.sort_by(&its[1]).each do |schema, name, values|
               params = [name.inspect]
               params << values.map(&:inspect).join(', ')
               params << ":schema => #{schema.inspect}" if schema != 'public'
