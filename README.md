@@ -62,6 +62,7 @@ drop_enum :color, schema: 'cmyk'
 
 ## History
 
+* 0.1.3 - Explicit gem dependencies
 * 0.1.2 - Upgrade schema_plus_core dependency
 * 0.1.1 - Clean up and sort dumper output.  Thanks to [@pik](https://github.com/pik)
 * 0.1.0 - Initial release, pulled from schema_plus 1.x
