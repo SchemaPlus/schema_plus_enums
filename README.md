@@ -68,6 +68,7 @@ drop_enum :color, schema: 'cmyk'
 
 ## Release Notes
 
+* 0.1.6 - Update dependencies to include AR 5.1.  Thanks to [@willsoto](https://github.com/willsoto)
 * 0.1.5 - Update dependencies to include AR 5.0.  Thanks to [@jimcavoli](https://github.com/jimcavoli)
 * 0.1.4 - Missing require
 * 0.1.3 - Explicit gem dependencies
