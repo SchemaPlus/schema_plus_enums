@@ -38,9 +38,6 @@ SchemaPlus::Enums is tested on:
 * ruby **2.4.1** with activerecord **4.2**, using **postgresql**
 * ruby **2.4.1** with activerecord **5.0**, using **postgresql**
 * ruby **2.4.1** with activerecord **5.1**, using **postgresql**
-* ruby **ruby-head** with activerecord **4.2**, using **postgresql**
-* ruby **ruby-head** with activerecord **5.0**, using **postgresql**
-* ruby **ruby-head** with activerecord **5.1**, using **postgresql**
 
 <!-- SCHEMA_DEV: MATRIX - end -->
 
