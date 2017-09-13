@@ -1,7 +1,6 @@
 [![Gem Version](https://badge.fury.io/rb/schema_plus_enums.svg)](http://badge.fury.io/rb/schema_plus_enums)
 [![Build Status](https://secure.travis-ci.org/SchemaPlus/schema_plus_enums.svg)](http://travis-ci.org/SchemaPlus/schema_plus_enums)
 [![Coverage Status](https://img.shields.io/coveralls/SchemaPlus/schema_plus_enums.svg)](https://coveralls.io/r/SchemaPlus/schema_plus_enums)
-[![Dependency Status](https://gemnasium.com/lomba/schema_plus_enums.svg)](https://gemnasium.com/SchemaPlus/schema_plus_enums)
 
 # SchemaPlus::Enums
 
