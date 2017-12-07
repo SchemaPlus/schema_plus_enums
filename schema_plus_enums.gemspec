@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency "activerecord", ">= 4.2", "<= 5.1"
+  gem.add_dependency "activerecord", ">= 4.2", "< 5.2"
   gem.add_dependency "schema_plus_core"
   gem.add_dependency "its-it", "~> 1.2"
 
