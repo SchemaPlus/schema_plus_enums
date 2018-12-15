@@ -31,12 +31,15 @@ SchemaPlus::Enums is tested on:
 * ruby **2.2.7** with activerecord **4.2**, using **postgresql**
 * ruby **2.2.7** with activerecord **5.0**, using **postgresql**
 * ruby **2.2.7** with activerecord **5.1**, using **postgresql**
+* ruby **2.2.7** with activerecord **5.2**, using **postgresql**
 * ruby **2.3.4** with activerecord **4.2**, using **postgresql**
 * ruby **2.3.4** with activerecord **5.0**, using **postgresql**
 * ruby **2.3.4** with activerecord **5.1**, using **postgresql**
+* ruby **2.3.4** with activerecord **5.2**, using **postgresql**
 * ruby **2.4.1** with activerecord **4.2**, using **postgresql**
 * ruby **2.4.1** with activerecord **5.0**, using **postgresql**
 * ruby **2.4.1** with activerecord **5.1**, using **postgresql**
+* ruby **2.4.1** with activerecord **5.2**, using **postgresql**
 
 <!-- SCHEMA_DEV: MATRIX - end -->
 
@@ -68,6 +71,7 @@ drop_enum :color, schema: 'cmyk'
 
 ## Release Notes
 
+* 0.1.8 - Update dependencies to include AR 5.2.
 * 0.1.7 - Update dependencies to include AR 5.1.*  Thanks to [@patleb](https://github.com/patleb)
 * 0.1.6 - Update dependencies to include AR 5.1.  Thanks to [@willsoto](https://github.com/willsoto)
 * 0.1.5 - Update dependencies to include AR 5.0.  Thanks to [@jimcavoli](https://github.com/jimcavoli)
