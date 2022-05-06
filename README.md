@@ -46,13 +46,32 @@ create_enum :color, 'red', 'green', 'blue' # default schema is 'public'
 create_enum :color, 'cyan', 'magenta', 'yellow', 'black', schema: 'cmyk'
 ```
 
-And can be altered: (added a new value)
+New values can be added
 
 ```ruby
-alter_enum :color, 'black'
-alter_enum :color, 'purple', after: 'red'
-alter_enum :color, 'pink', before: 'purple'
-alter_enum :color, 'white', schema: 'public'
+add_enum_value :color, 'black'
+add_enum_value :color, 'red', if_not_exists: true
+add_enum_value :color, 'purple', after: 'red'
+add_enum_value :color, 'pink', before: 'purple'
+add_enum_value :color, 'white', schema: 'cmyk'
+```
+     
+Values can be dropped
+```ruby
+remove_enum_value :color, 'black'
+remove_enum_value :color, 'black', schema: 'cmyk'
+```
+
+Values can be renamed
+```ruby
+rename_enum_value :color, 'red', 'orange'
+rename_enum_value :color, 'red', 'orange', schema: 'cmyk'
+```
+
+The enum can be renamed
+```ruby
+rename_enum :color, :hue
+rename_enum :color, :hue, schema: 'cmyk'
 ```
 
 And can be dropped:
@@ -64,15 +83,16 @@ drop_enum :color, schema: 'cmyk'
 
 ## Release Notes
 
-* 0.1.8 - Update dependencies to include AR 5.2.
-* 0.1.7 - Update dependencies to include AR 5.1.*  Thanks to [@patleb](https://github.com/patleb)
-* 0.1.6 - Update dependencies to include AR 5.1.  Thanks to [@willsoto](https://github.com/willsoto)
-* 0.1.5 - Update dependencies to include AR 5.0.  Thanks to [@jimcavoli](https://github.com/jimcavoli)
-* 0.1.4 - Missing require
-* 0.1.3 - Explicit gem dependencies
-* 0.1.2 - Upgrade schema_plus_core dependency
-* 0.1.1 - Clean up and sort dumper output.  Thanks to [@pik](https://github.com/pik)
-* 0.1.0 - Initial release, pulled from schema_plus 1.x
+* **1.0.0** - Add AR 6.0, Ruby 3.0, and drop AR < 5.2 and Ruby < 2.5. Also add new functionality
+* **0.1.8** - Update dependencies to include AR 5.2.
+* **0.1.7** - Update dependencies to include AR 5.1.*  Thanks to [@patleb](https://github.com/patleb)
+* **0.1.6** - Update dependencies to include AR 5.1.  Thanks to [@willsoto](https://github.com/willsoto)
+* **0.1.5** - Update dependencies to include AR 5.0.  Thanks to [@jimcavoli](https://github.com/jimcavoli)
+* **0.1.4** - Missing require
+* **0.1.3** - Explicit gem dependencies
+* **0.1.2** - Upgrade schema_plus_core dependency
+* **0.1.1** - Clean up and sort dumper output.  Thanks to [@pik](https://github.com/pik)
+* **0.1.0** - Initial release, pulled from schema_plus 1.x
 
 ## Development & Testing
 
