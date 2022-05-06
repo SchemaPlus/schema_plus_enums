@@ -1,11 +1,11 @@
 ruby:
-    - 2.2.7
-    - 2.3.4
-    - 2.4.1
+    - 2.5
+    - 2.7
+    - 3.0
 activerecord:
-    - 4.2
-    - 5.0
-    - 5.1
     - 5.2
+    - 6.0
 db:
     - postgresql
+dbversions:
+    postgresql: ['9.6','10', '11', '12']

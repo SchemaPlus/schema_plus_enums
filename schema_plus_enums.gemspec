@@ -18,14 +18,14 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency "activerecord", ">= 4.2", "< 5.3"
-  gem.add_dependency "schema_plus_core"
-  gem.add_dependency "its-it", "~> 1.2"
+  gem.required_ruby_version = '>= 2.5'
 
-  gem.add_development_dependency "bundler", "~> 1.7"
-  gem.add_development_dependency "rake", "~> 10.0"
-  gem.add_development_dependency "rspec", "~> 3.0"
-  gem.add_development_dependency "schema_dev", "~> 3.6"
-  gem.add_development_dependency "simplecov"
-  gem.add_development_dependency "simplecov-gem-profile"
+  gem.add_dependency 'activerecord', '>= 5.2', '< 6.1'
+  gem.add_dependency 'schema_plus_core', '~> 3.0.0'
+  gem.add_dependency 'its-it', '~> 1.2'
+
+  gem.add_development_dependency 'bundler'
+  gem.add_development_dependency 'rake', '~> 13.0'
+  gem.add_development_dependency 'rspec', '~> 3.0'
+  gem.add_development_dependency 'schema_dev', '~> 4.1'
 end
