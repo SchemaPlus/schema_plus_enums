@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'schema_plus/core'
 require 'its-it'
 
