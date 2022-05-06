@@ -18,7 +18,9 @@ def enum_fields(name, schema = 'public')
 end
 
 describe 'enum', :postgresql => :only do
-  before(:all) do ActiveRecord::Migration.verbose = false end
+  before(:all) do
+    ActiveRecord::Migration.verbose = false
+  end
 
   let(:migration) { ActiveRecord::Migration }
 
@@ -75,7 +77,7 @@ describe 'enum', :postgresql => :only do
       end
     end
 
-    it 'should escape schame name and enum name' do
+    it 'should escape scheme name and enum name' do
       begin
         migration.execute 'CREATE SCHEMA "select"'
         migration.create_enum 'where', *%|red green blue|, schema: 'select'
@@ -85,24 +87,92 @@ describe 'enum', :postgresql => :only do
       end
     end
 
+    context 'when force: true is passed' do
+      it 'removes the existing enum' do
+        allow(migration.connection).to receive(:drop_enum)
+
+        migration.create_enum 'color', *%w|red green blue|, force: true
+
+        expect(migration.connection).to have_received(:drop_enum).with(
+          'color', { cascade: false, if_exists: true, schema: nil }
+        )
+
+        migration.execute 'DROP TYPE IF EXISTS color'
+      end
+    end
+
+    context 'when force: :cascade is passed' do
+      it 'removes the existing enum' do
+        allow(migration.connection).to receive(:drop_enum)
+
+        migration.create_enum 'color', *%w|red green blue|, force: :cascade
+
+        expect(migration.connection).to have_received(:drop_enum).with(
+          'color', { cascade: true, if_exists: true, schema: nil }
+        )
+
+        migration.execute 'DROP TYPE IF EXISTS color'
+      end
+    end
+
+    context 'when force: :cascade is passed with a schema' do
+      it 'removes the existing enum' do
+        allow(migration.connection).to receive(:drop_enum)
+
+        migration.create_enum 'color', *%w|red green blue|, force: :cascade, schema: 'public'
+
+        expect(migration.connection).to have_received(:drop_enum).with(
+          'color', { cascade: true, if_exists: true, schema: 'public' }
+        )
+
+        migration.execute 'DROP TYPE IF EXISTS color'
+      end
+    end
   end
 
   describe 'alter_enum' do
-    before(:each) do migration.create_enum('color', 'red', 'green', 'blue') end
-    after(:each) do migration.execute 'DROP TYPE IF EXISTS color' end
+    before do
+      migration.create_enum('color', 'red', 'green', 'blue')
+      allow(ActiveSupport::Deprecation).to receive(:warn)
+      allow(migration.connection).to receive(:add_enum_value)
+    end
+    after do
+      migration.execute 'DROP TYPE IF EXISTS color'
+    end
+
+    it 'calls add_enum_value' do
+      migration.alter_enum('color', 'magenta')
+
+      expect(migration.connection).to have_received(:add_enum_value)
+    end
+
+    it 'sends a deprecation warning' do
+      migration.alter_enum('color', 'magenta')
+
+      expect(ActiveSupport::Deprecation).to have_received(:warn)
+    end
+  end
+
+  describe 'add_enum_value' do
+    before do
+      migration.create_enum('color', 'red', 'green', 'blue')
+    end
+    after do
+      migration.execute 'DROP TYPE IF EXISTS color'
+    end
 
     it 'should add new value after all values' do
-      migration.alter_enum('color', 'magenta')
+      migration.add_enum_value('color', 'magenta')
       expect(enum_fields('color')).to eq(%w|red green blue magenta|)
     end
 
     it 'should add new value after existed' do
-      migration.alter_enum('color', 'magenta', after: 'red')
+      migration.add_enum_value('color', 'magenta', after: 'red')
       expect(enum_fields('color')).to eq(%w|red magenta green blue|)
     end
 
     it 'should add new value before existed' do
-      migration.alter_enum('color', 'magenta', before: 'green')
+      migration.add_enum_value('color', 'magenta', before: 'green')
       expect(enum_fields('color')).to eq(%w|red magenta green blue|)
     end
 
@@ -110,11 +180,123 @@ describe 'enum', :postgresql => :only do
       begin
         migration.execute 'CREATE SCHEMA colors'
         migration.create_enum('color', 'red', schema: 'colors')
-        migration.alter_enum('color', 'green', schema: 'colors')
+        migration.add_enum_value('color', 'green', schema: 'colors')
 
         expect(enum_fields('color', 'colors')).to eq(%w|red green|)
       ensure
         migration.execute 'DROP SCHEMA colors CASCADE'
+      end
+    end
+
+    context 'without if_not_exists: true' do
+      it 'raises a DB error if the value exists' do
+        expect {
+          migration.add_enum_value('color', 'red')
+        }.to raise_error(ActiveRecord::StatementInvalid)
+      end
+    end
+
+    context 'with if_not_exists: true' do
+      it 'does not raise a DB error if the value exists' do
+        expect {
+          migration.add_enum_value('color', 'red', if_not_exists: true)
+        }.to_not raise_error
+      end
+    end
+  end
+
+  describe 'remove_enum_value' do
+    before do
+      migration.create_enum('color', 'red', 'green', 'blue')
+    end
+    after do
+      migration.execute 'DROP TYPE IF EXISTS color'
+    end
+
+    it 'removes the value' do
+      expect {
+        migration.remove_enum_value('color', 'green')
+      }.to change {
+        enum_fields('color')
+      }.to(%w[red blue])
+    end
+
+    context 'when the enum is in a schema' do
+      before do
+        migration.execute "CREATE SCHEMA colors; CREATE TYPE colors.color AS ENUM ('red', 'magenta', 'blue')"
+      end
+      after do
+        migration.execute "DROP SCHEMA colors CASCADE"
+      end
+
+      it 'should rename the enum within given name and schema' do
+        expect {
+          migration.remove_enum_value('color', 'blue', schema: 'colors')
+        }.to change {
+          enum_fields('color', 'colors')
+        }.to(%w[red magenta])
+      end
+    end
+  end
+
+  describe 'rename_enum_value' do
+    before do
+      migration.create_enum('color', 'red', 'green', 'blue')
+    end
+    after do
+      migration.execute 'DROP TYPE IF EXISTS color'
+    end
+
+    context 'when postgresql version is >= 10', pg_version: '>= 10.0' do
+      it 'renames the value' do
+        expect {
+          migration.rename_enum_value('color', 'green', 'orange')
+        }.to change {
+          enum_fields('color')
+        }.to(%w[red orange blue])
+      end
+    end
+
+    context 'when postgresql version is < 10', pg_version: '< 10.0' do
+      it 'raises an error' do
+        expect {
+          migration.rename_enum_value('color', 'green', 'orange')
+        }.to raise_error(/Renaming enum values is only supported/)
+      end
+    end
+  end
+
+  describe 'rename_enum' do
+    before do
+      migration.create_enum('color', 'red', 'green', 'blue')
+    end
+    after do
+      migration.execute 'DROP TYPE IF EXISTS color'
+      migration.execute 'DROP TYPE IF EXISTS shade'
+    end
+
+    it 'renames the enum' do
+      expect {
+        migration.rename_enum('color', 'shade')
+      }.to change {
+        migration.enums.map(&:second)
+      }.from(contain_exactly('color')).to(contain_exactly('shade'))
+    end
+
+    context 'when the enum is in a schema' do
+      before do
+        migration.execute "CREATE SCHEMA colors; CREATE TYPE colors.color AS ENUM ('red', 'blue')"
+      end
+      after do
+        migration.execute "DROP SCHEMA colors CASCADE"
+      end
+
+      it 'should rename the enum within given name and schema' do
+        expect {
+          migration.rename_enum('color', 'shade', schema: 'colors')
+        }.to change {
+          enum_fields('shade', 'colors')
+        }.from(nil).to(%w[red blue])
       end
     end
   end
@@ -138,6 +320,41 @@ describe 'enum', :postgresql => :only do
       ensure
         migration.execute "DROP SCHEMA colors CASCADE"
       end
+    end
+
+    context 'when the enum does not exist' do
+      it 'should fail when if_exists: true is not passed' do
+        expect {
+          migration.drop_enum('color')
+        }.to raise_error(ActiveRecord::StatementInvalid)
+      end
+
+      it 'should fail silently when if_exists: true is passed' do
+        expect {
+          migration.drop_enum('color', if_exists: true)
+        }.to_not raise_error
+      end
+    end
+
+    context 'when cascade: true is passed' do
+      it 'cascades through and drops columns' do
+        migration.create_enum 'color', %w[red blue green]
+        migration.create_table :posts do |t|
+          t.column :text_color, :color
+        end
+
+        expect {
+          migration.drop_enum 'color', cascade: true
+        }.to change {
+          migration.columns('posts').map(&:name)
+        }.from(include('text_color')).to not_include('text_color')
+      end
+    end
+  end
+
+  describe 'create_table' do
+    before do
+      migration.create_enum 'color', *%w|red green blue|, force: true
     end
   end
 end
