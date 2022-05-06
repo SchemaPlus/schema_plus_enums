@@ -23,7 +23,6 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'activerecord', '>= 5.2', '< 6.1'
   gem.add_dependency 'schema_plus_core', '~> 3.0.0'
-  gem.add_dependency 'its-it', '~> 1.2'
 
   gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'rake', '~> 13.0'
