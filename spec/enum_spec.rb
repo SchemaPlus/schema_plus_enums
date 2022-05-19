@@ -247,7 +247,7 @@ describe 'enum', :postgresql => :only do
       migration.execute 'DROP TYPE IF EXISTS color'
     end
 
-    context 'when postgresql version is >= 10', pg_version: '>= 10.0' do
+    context 'when postgresql version is >= 10', postgresql: '>= 10.0' do
       it 'renames the value' do
         expect {
           migration.rename_enum_value('color', 'green', 'orange')
@@ -257,7 +257,7 @@ describe 'enum', :postgresql => :only do
       end
     end
 
-    context 'when postgresql version is < 10', pg_version: '< 10.0' do
+    context 'when postgresql version is < 10', postgresql: '< 10.0' do
       it 'raises an error' do
         expect {
           migration.rename_enum_value('color', 'green', 'orange')

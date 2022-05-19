@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'simplecov'
-SimpleCov.start
+SimpleCov.start unless SimpleCov.running
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
@@ -19,13 +19,6 @@ RSpec::Matchers.define_negated_matcher :not_include, :include
 
 RSpec.configure do |config|
   config.warnings = true
-
-  config.filter_run_excluding pg_version: lambda { |v|
-    version = ActiveRecord::Base.connection.select_value("SHOW server_version").match(/(\d+\.\d+)/)[1]
-    postgresql_version = Gem::Version.new(version)
-    test = Gem::Requirement.new(v)
-    !test.satisfied_by?(postgresql_version)
-  }
 
   config.after do
     ActiveRecord::Base.connection.tap do |c|
